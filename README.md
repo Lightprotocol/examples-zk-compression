@@ -2,16 +2,16 @@
 
 ## Client Examples
 
-### [Node.js Client] (https://github.com/Lightprotocol/example-nodejs-client/tree/3a8401db8f57970cff8f5e60751a2f757074f030)
+### [Node.js Client](https://github.com/Lightprotocol/example-nodejs-client/tree/3a8401db8f57970cff8f5e60751a2f757074f030)
 
-### [Web Client] (https://github.com/Lightprotocol/example-web-client/tree/e3236edbb04898b415f85c6a82bb4720783341d8)
+### [Web Client](https://github.com/Lightprotocol/example-web-client/tree/e3236edbb04898b415f85c6a82bb4720783341d8)
 
-### [Token Distribution] (https://github.com/Lightprotocol/example-token-distribution)
+### [Token Distribution](https://github.com/Lightprotocol/example-token-distribution)
 
 ## Programs with Tests
 
 ### Airdrop with Claim
-* [Light Compressed Claim Reference Implementation] (https://github.com/Lightprotocol/example-compressed-claim/tree/c9e4d049ab6c6c36fe06cb7e7770b79b072271ef)
+* [Light Compressed Claim Reference Implementation](https://github.com/Lightprotocol/example-compressed-claim/tree/c9e4d049ab6c6c36fe06cb7e7770b79b072271ef)
 
 ### Basic Operation Programs
 
