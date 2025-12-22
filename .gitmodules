@@ -1,15 +1,20 @@
 [submodule "example-nodejs-client"]
 	path = example-nodejs-client
 	url = git@github.com:Lightprotocol/example-nodejs-client.git
+	branch = main
 [submodule "program-examples"]
 	path = program-examples
 	url = git@github.com:Lightprotocol/program-examples.git
+	branch = main
 [submodule "example-compressed-claim"]
 	path = example-compressed-claim
 	url = git@github.com:Lightprotocol/example-compressed-claim.git
+	branch = main
 [submodule "example-web-client"]
 	path = example-web-client
 	url = git@github.com:Lightprotocol/example-web-client.git
+	branch = main
 [submodule "example-token-distribution"]
 	path = example-token-distribution
 	url = git@github.com:Lightprotocol/example-token-distribution.git
+	branch = main
