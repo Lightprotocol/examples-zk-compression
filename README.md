@@ -8,7 +8,7 @@
 
 ### [Token Distribution](https://github.com/Lightprotocol/example-token-distribution)
 
-## Programs with Tests
+## [Program Examples](https://github.com/Lightprotocol/program-examples)
 
 ### Airdrop with Claim
 * [Light Compressed Claim Reference Implementation](https://github.com/Lightprotocol/example-compressed-claim/tree/main)
