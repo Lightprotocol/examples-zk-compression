@@ -1,0 +1,33 @@
+{
+    "name": "compressed-token-cookbook",
+    "version": "1.0.0",
+    "type": "module",
+    "description": "Working examples for compressed token operations on Solana devnet",
+    "scripts": {
+        "create-mint:action": "tsx actions/create-mint.ts",
+        "create-mint:instruction": "tsx instructions/create-mint.ts",
+        "create-token-pool:action": "tsx actions/create-token-pool.ts",
+        "mint-to:action": "tsx actions/mint-to.ts",
+        "mint-to:instruction": "tsx instructions/mint-to.ts",
+        "transfer:action": "tsx actions/transfer.ts",
+        "compress:action": "tsx actions/compress.ts",
+        "decompress:action": "tsx actions/decompress.ts",
+        "approve:action": "tsx actions/approve.ts",
+        "revoke:action": "tsx actions/revoke.ts",
+        "merge-accounts:action": "tsx actions/merge-token-accounts.ts"
+    },
+    "dependencies": {
+        "@lightprotocol/compressed-token": "0.22.1-alpha.7",
+        "@lightprotocol/stateless.js": "0.22.1-alpha.6",
+        "@solana/spl-token": "^0.4.13",
+        "@solana/web3.js": "1.98.4",
+        "bn.js": "^5.2.1",
+        "dotenv": "^16.5.0"
+    },
+    "devDependencies": {
+        "@types/bn.js": "^5.1.5",
+        "@types/node": "^20.0.0",
+        "tsx": "^4.7.0",
+        "typescript": "^5.0.0"
+    }
+}
