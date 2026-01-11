@@ -46,7 +46,7 @@ Full compressed account lifecycle (create, increment, decrement, reset, close):
 - **[read-only](https://github.com/Lightprotocol/program-examples/tree/main/read-only)** - Create a new compressed account and read it onchain.
 
 
-### Compare uncompressed vs compressed accounts Program
+### Compare Program with Solana vs Compressed Accounts
 
 - **[account-comparison](https://github.com/Lightprotocol/program-examples/tree/main/account-comparison)** - Compare compressed vs regular Solana accounts.
 
