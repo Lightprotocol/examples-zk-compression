@@ -14,7 +14,8 @@
         "decompress:action": "tsx actions/decompress.ts",
         "approve:action": "tsx actions/approve.ts",
         "revoke:action": "tsx actions/revoke.ts",
-        "merge-accounts:action": "tsx actions/merge-token-accounts.ts"
+        "merge-accounts:action": "tsx actions/merge-token-accounts.ts",
+        "compress-spl-account:action": "tsx actions/compress-spl-account.ts"
     },
     "dependencies": {
         "@lightprotocol/compressed-token": "0.22.1-alpha.7",

@@ -29,6 +29,7 @@ npm run decompress:action
 npm run approve:action
 npm run revoke:action
 npm run merge-accounts:action
+npm run compress-spl-account:action
 ```
 
 ### Instructions
