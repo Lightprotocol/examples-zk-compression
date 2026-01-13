@@ -20,17 +20,19 @@
 
 For simple client side distribution visit [this example](https://github.com/Lightprotocol/example-token-distribution).
 
-### Basic Operation Programs
+### Basic Operations
 
-- **[basic-operations/anchor](https://github.com/Lightprotocol/program-examples/tree/main/basic-operations/anchor)** - Anchor program with Rust and TypeScript tests
-- **[basic-operations/native-rust](https://github.com/Lightprotocol/program-examples/tree/main/basic-operations/native-rust)** - Native Solana program with light-sdk and Rust tests.
-
-Basic Operations include:
-- **create** - Initialize a new compressed account.
-- **update** - Modify data in an existing compressed account.
-- **close** - Clear account data and preserve its address.
-- **reinit** - Reinitialize a closed account with the same address.
-- **burn** - Permanently delete a compressed account.
+- **[create-nullifier](./basic-operations/anchor/create-nullifier)** - Basic Anchor example to create nullifiers for payments.
+- **create** - Initialize a new compressed account
+  - [Anchor](./basic-operations/anchor/create) | [Native](./basic-operations/native/programs/create)
+- **update** - Modify data in an existing compressed account
+  - [Anchor](./basic-operations/anchor/update) | [Native](./basic-operations/native/programs/update)
+- **close** - Clear account data and preserve its address
+  - [Anchor](./basic-operations/anchor/close) | [Native](./basic-operations/native/programs/close)
+- **reinit** - Reinitialize a closed account with the same address
+  - [Anchor](./basic-operations/anchor/reinit) | [Native](./basic-operations/native/programs/reinit)
+- **burn** - Permanently delete a compressed account
+  - [Anchor](./basic-operations/anchor/burn) | [Native](./basic-operations/native/programs/burn)
 
 ### Counter Program
 
