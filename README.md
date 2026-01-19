@@ -2,11 +2,9 @@
 
 ## Client Examples
 
-### Node.js Client
-* [Commonjs script](https://github.com/Lightprotocol/example-nodejs-client/tree/main) that executes basic compression/decompression/transfer instructions.
-  
-### Web Client
-* [Browser based example application](https://github.com/Lightprotocol/example-web-client/tree/main) to interact with the ZK Compression API.
+### Privy Integration
+
+* [nodejs-privy-compressed](./privy/nodejs-privy-compressed) - Privy embedded wallet with compressed tokens.
 
 ### Token Distribution
 * [Reference implementations](https://github.com/Lightprotocol/example-token-distribution) for common token distribution flows with ZK Compression (airdrops, payments, rewards)

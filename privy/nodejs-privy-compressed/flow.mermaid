@@ -1,0 +1,190 @@
+%% Privy Compressed Token Flow
+%% Shows message flow between off-chain (Client, Privy) and on-chain (Light Protocol, Solana) components
+
+sequenceDiagram
+    autonumber
+
+    participant Client as Client<br/>(CLI/API)
+    participant Privy as Privy Server<br/>(wallets().solana())
+    participant RPC as Solana RPC<br/>(Helius + Light Indexer)
+    participant CompressedToken as On-Chain:Compressed Token Program<br/>(Light Protocol)
+    participant SPL as On-Chain:SPL Token Program
+    participant Compression as On-Chain:Account Compression<br/>Program
+
+    Note over Client,Compression: === COMPRESS FLOW (SPL → Compressed) ===
+    Note over Client,Compression: File: src/operations/compress.ts
+
+    rect rgb(240, 248, 255)
+        Note right of Client: Client builds unsigned transaction
+        Client->>Client: getAssociatedTokenAddressSync(mint, owner)
+        Client->>RPC: getAccount(ownerAta)
+        RPC-->>Client: TokenAccount {amount}
+        Client->>Client: Verify ataAccount.amount >= tokenAmount
+        Client->>RPC: getStateTreeInfos()
+        RPC-->>Client: StateTreeInfo[]
+        Client->>Client: selectStateTreeInfo(stateTreeInfos)
+        Client->>RPC: getTokenPoolInfos(mint)
+        RPC-->>Client: TokenPoolInfo[]
+        Client->>Client: selectTokenPoolInfo(tokenPoolInfos)
+        Client->>Client: CompressedTokenProgram.compress({<br/>  payer, owner, source: ownerAta,<br/>  toAddress: recipient, mint, amount,<br/>  outputStateTreeInfo, tokenPoolInfo<br/>})
+        Client->>Client: ComputeBudgetProgram.setComputeUnitLimit(300_000)
+        Client->>Client: transaction.add(compressInstruction)
+        Note right of Client: compress.ts:58
+    end
+
+    rect rgb(255, 250, 240)
+        Note right of Client: Privy signs transaction server-side
+        Client->>Privy: signWithPrivy(transaction)
+        Note over Privy: sign.ts:13<br/>TREASURY_WALLET_ID<br/>TREASURY_AUTHORIZATION_KEY
+        Privy->>Privy: transaction.serialize({requireAllSignatures: false})
+        Privy->>Privy: wallets().solana().signTransaction(walletId, {<br/>  transaction: serializedTx,<br/>  authorization_context: {<br/>    authorization_private_keys: [authKey]<br/>  }<br/>})
+        Privy-->>Client: Buffer.from(signed_transaction, 'base64')
+        Note right of Client: sign.ts:26
+    end
+
+    rect rgb(240, 255, 240)
+        Note right of Client: Send and confirm transaction
+        Client->>RPC: sendRawTransaction(signedTxBuffer)
+        RPC-->>Client: signature
+        Client->>RPC: confirmTransaction(signature, 'confirmed')
+        RPC-->>Client: RpcResponseAndContext
+        Client->>Client: sleep(2000)
+        Note right of Client: Wait for indexer to process
+    end
+
+    rect rgb(240, 255, 240)
+        Note over CompressedToken,Compression: On-chain execution
+        SPL->>SPL: Transfer tokens from ownerAta to token pool
+        CompressedToken->>Compression: Append compressed account to state tree
+        CompressedToken->>CompressedToken: Create CompressedTokenAccount {<br/>  owner: recipient, mint, amount<br/>}
+        CompressedToken-->>RPC: Transaction success
+    end
+
+    RPC-->>Client: signature
+
+    Note over Client,Compression: === TRANSFER FLOW (Compressed → Compressed) ===
+    Note over Client,Compression: File: src/operations/transfer.ts
+
+    rect rgb(240, 248, 255)
+        Note right of Client: Client builds unsigned transaction
+        Client->>RPC: getCompressedTokenAccountsByOwner(owner, {mint})
+        RPC-->>Client: {items: CompressedTokenAccount[]}
+        Note right of Client: transfer.ts:24
+        Client->>Client: Filter null items from indexer response
+        Client->>Client: selectMinCompressedTokenAccountsForTransfer(validItems, tokenAmount)
+        Note right of Client: Returns [CompressedTokenAccount[], remainder]
+        Client->>Client: Map accounts to hashes: inputAccounts.map(a => bn(a.compressedAccount.hash))
+        Client->>RPC: getValidityProof(hashes)
+        RPC-->>Client: {rootIndices, compressedProof: CompressedProof}
+        Note right of Client: transfer.ts:37
+        Client->>Client: CompressedTokenProgram.transfer({<br/>  payer, inputCompressedTokenAccounts,<br/>  toAddress: recipient, amount,<br/>  recentInputStateRootIndices: proof.rootIndices,<br/>  recentValidityProof: proof.compressedProof<br/>})
+        Client->>Client: ComputeBudgetProgram.setComputeUnitLimit(300_000)
+        Client->>Client: transaction.add(transferInstruction)
+        Note right of Client: transfer.ts:58
+    end
+
+    rect rgb(255, 250, 240)
+        Note right of Client: Privy signs transaction server-side
+        Client->>Privy: signWithPrivy(transaction)
+        Privy->>Privy: transaction.serialize({requireAllSignatures: false})
+        Privy->>Privy: wallets().solana().signTransaction(walletId, {<br/>  transaction, authorization_context<br/>})
+        Privy-->>Client: Buffer.from(signed_transaction, 'base64')
+    end
+
+    rect rgb(240, 255, 240)
+        Note right of Client: Send and confirm transaction
+        Client->>RPC: sendRawTransaction(signedTxBuffer)
+        RPC-->>Client: signature
+        Client->>RPC: confirmTransaction(signature, 'confirmed')
+        RPC-->>Client: RpcResponseAndContext
+        Client->>Client: sleep(2000)
+        Note right of Client: Wait for indexer to process
+    end
+
+    rect rgb(240, 255, 240)
+        Note over CompressedToken,Compression: On-chain execution
+        CompressedToken->>Compression: Verify proof against state tree
+        CompressedToken->>Compression: Nullify input compressed accounts
+        CompressedToken->>Compression: Append new compressed account to state tree
+        CompressedToken->>CompressedToken: Create CompressedTokenAccount {<br/>  owner: recipient, mint, amount<br/>}
+        CompressedToken-->>RPC: Transaction success
+    end
+
+    RPC-->>Client: signature
+
+    Note over Client,Compression: === DECOMPRESS FLOW (Compressed → SPL) ===
+    Note over Client,Compression: File: src/operations/decompress.ts
+
+    rect rgb(240, 248, 255)
+        Note right of Client: Client builds unsigned transaction
+        Client->>Client: getAssociatedTokenAddressSync(mint, owner)
+        Client->>RPC: getAccount(ownerAta)
+        Note right of Client: decompress.ts:80<br/>Create ATA if TokenAccountNotFoundError
+        Client->>Client: createAssociatedTokenAccountInstruction(owner, ownerAta, owner, mint)
+        Client->>RPC: getCompressedTokenAccountsByOwner(owner, {mint})
+        RPC-->>Client: {items: CompressedTokenAccount[]}
+        Client->>Client: Filter null items from indexer response
+        Note right of Client: decompress.ts:31
+        Client->>Client: selectMinCompressedTokenAccountsForTransfer(validItems, bn(rawAmount))
+        Client->>RPC: getTokenPoolInfos(mint)
+        RPC-->>Client: TokenPoolInfo[]
+        Note right of Client: decompress.ts:48
+        Client->>Client: selectTokenPoolInfosForDecompression(tokenPoolInfos, rawAmount)
+        Note right of Client: Choose pools with sufficient liquidity
+        Client->>Client: Map accounts to hashes: inputAccounts.map(a => bn(a.compressedAccount.hash))
+        Client->>RPC: getValidityProof(hashes)
+        RPC-->>Client: {rootIndices, compressedProof: CompressedProof}
+        Note right of Client: decompress.ts:47
+        Client->>Client: CompressedTokenProgram.decompress({<br/>  payer, inputCompressedTokenAccounts,<br/>  toAddress: ownerAta, amount: rawAmount,<br/>  recentInputStateRootIndices: proof.rootIndices,<br/>  recentValidityProof: proof.compressedProof,<br/>  tokenPoolInfos: selectedTokenPoolInfos<br/>})
+        Client->>Client: WORKAROUND (lines 116-137):<br/>Set accounts 13-14 to read-only<br/>(state tree + output queue)
+        Note right of Client: SDK bug: CPI expects read-only accounts
+        Client->>Client: ComputeBudgetProgram.setComputeUnitLimit(400_000)
+        Client->>Client: transaction.add(decompressInstruction)
+        Note right of Client: decompress.ts:144
+    end
+
+    rect rgb(255, 250, 240)
+        Note right of Client: Privy signs transaction server-side
+        Client->>Privy: signWithPrivy(transaction)
+        Privy->>Privy: transaction.serialize({requireAllSignatures: false})
+        Privy->>Privy: wallets().solana().signTransaction(walletId, {<br/>  transaction, authorization_context<br/>})
+        Privy-->>Client: Buffer.from(signed_transaction, 'base64')
+    end
+
+    rect rgb(240, 255, 240)
+        Note right of Client: Send and confirm transaction
+        Client->>RPC: sendRawTransaction(signedTxBuffer)
+        RPC-->>Client: signature
+        Client->>RPC: confirmTransaction(signature, 'confirmed')
+        RPC-->>Client: RpcResponseAndContext
+        Client->>Client: sleep(2000)
+        Note right of Client: Wait for indexer to process
+    end
+
+    rect rgb(240, 255, 240)
+        Note over CompressedToken,Compression: On-chain execution
+        CompressedToken->>Compression: Verify proof against state tree
+        CompressedToken->>Compression: Nullify input compressed accounts
+        CompressedToken->>CompressedToken: Transfer tokens from pool to ownerAta
+        SPL->>SPL: Update TokenAccount.amount += decompressed amount
+        CompressedToken-->>RPC: Transaction success
+    end
+
+    RPC-->>Client: signature
+
+    Note over Client,Compression: === BUILD → SIGN → SEND PATTERN ===
+
+    rect rgb(245, 255, 250)
+        Note over Client,Privy: Common Pattern Across All Flows
+        Note over Client,Privy: 1. BUILD: Construct unsigned transaction with Light Protocol SDK
+        Note over Client,Privy: 2. SIGN: Sign with Privy server-side wallet using authorization context
+        Note over Client,Privy: 3. SEND: Broadcast to Solana network via RPC and confirm
+    end
+
+    Note over Client,Compression: === KEY IMPLEMENTATION DETAILS ===
+
+    Note over Client: Privy Authorization Context:<br/>TREASURY_WALLET_ID - Wallet identifier<br/>TREASURY_AUTHORIZATION_KEY - Authorization key (wallet-auth:...)<br/>Transaction serialized with requireAllSignatures: false
+
+    Note over RPC: Light Protocol SDK Methods:<br/>getCompressedTokenAccountsByOwner() - Fetch compressed accounts<br/>getStateTreeInfos() / selectStateTreeInfo() - Choose state tree<br/>getTokenPoolInfos() / selectTokenPoolInfosForDecompression() - Choose pools<br/>getValidityProof(hashes) - Fetch merkle proofs<br/>selectMinCompressedTokenAccountsForTransfer() - Choose minimum subset
+
+    Note over CompressedToken: Transaction Details:<br/>Compute budget: 300k (compress/transfer) or 400k (decompress) units<br/>Confirmation level: 'confirmed'<br/>2-second indexer delay after confirmation<br/>Null filtering for indexer responses

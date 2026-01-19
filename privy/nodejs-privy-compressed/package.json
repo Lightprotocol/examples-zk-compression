@@ -1,0 +1,25 @@
+{
+  "name": "nodejs-privy-compressed",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "tsx src/index.ts",
+    "compress": "tsx src/compress.ts",
+    "transfer": "tsx src/transfer.ts",
+    "decompress": "tsx src/decompress.ts",
+    "mint:compressed": "tsx src/helpers/mint-compressed.ts",
+    "mint:spl": "tsx src/helpers/mint-spl.ts"
+  },
+  "dependencies": {
+    "@privy-io/node": "^0.1.0-alpha.2",
+    "@lightprotocol/stateless.js": "0.22.1-alpha.6",
+    "@lightprotocol/compressed-token": "0.22.1-alpha.7",
+    "@solana/web3.js": "1.98.4",
+    "@solana/spl-token": "^0.4.13",
+    "dotenv": "^16.4.7"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.2",
+    "typescript": "^5.8.3"
+  }
+}
