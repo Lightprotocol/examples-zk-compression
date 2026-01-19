@@ -4,7 +4,8 @@
 
 ### Privy Integration
 
-* [nodejs-privy-compressed](./privy/nodejs-privy-compressed) - Privy embedded wallet with compressed tokens.
+* [nodejs-privy-compressed](./privy/nodejs-privy-compressed) - Node.js Privy integration.
+* [react-privy-compressed](./privy/react-privy-compressed) - React + Vite app
 
 ### Token Distribution
 * [Reference implementations](https://github.com/Lightprotocol/example-token-distribution) for common token distribution flows with ZK Compression (airdrops, payments, rewards)
