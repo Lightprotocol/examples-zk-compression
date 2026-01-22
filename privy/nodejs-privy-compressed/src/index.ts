@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import transferCompressedTokens from './transfer.js';
-import compressSplTokens from './compress.js';
+import compressTokens from './compress.js';
 import decompressTokens from './decompress.js';
 import { getCompressedBalances } from './balances.js';
 import { TREASURY_WALLET_ADDRESS, TEST_MINT } from './config.js';

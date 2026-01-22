@@ -5,7 +5,7 @@ import {PublicKey, Transaction, ComputeBudgetProgram} from '@solana/web3.js';
 import {getAssociatedTokenAddressSync, getAccount} from '@solana/spl-token';
 import {CompressedTokenProgram, getTokenPoolInfos, selectTokenPoolInfo} from '@lightprotocol/compressed-token';
 
-const compressSplTokens = async (
+const compressTokens = async (
   fromAddress: string,
   toAddress: string,
   tokenMintAddress: string,
@@ -84,4 +84,4 @@ const compressSplTokens = async (
   return signature;
 };
 
-export default compressSplTokens;
+export default compressTokens;
