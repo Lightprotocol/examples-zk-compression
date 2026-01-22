@@ -1,6 +1,13 @@
 # Privy + ZK Compression - React
 
-Example to sign with Privy's React SDK compressed token transfers,compress SPL tokens to a recipient, and decompress for offramp.
+Example to sign with Privy's React SDK compressed token transfers, compress SPL tokens to a recipient, and decompress for offramp.
+
+- **[useTransfer](src/hooks/useTransfer.ts)** - Transfer compressed tokens
+- **[useCompress](src/hooks/useCompress.ts)** - Compress SPL tokens to recipient in one transaction
+- **[useDecompress](src/hooks/useDecompress.ts)** - Decompress tokens to SPL
+- **[useCompressedBalances](src/hooks/useCompressedBalances.ts)** - Fetch compressed SPL and compressed token balances
+- **[useTransactionHistory](src/hooks/useTransactionHistory.ts)** - Fetch transaction history
+- **[comparison-spl-light.md](comparison-spl-light.md)** - SPL vs Compressed code comparison
 
 ## Getting Started
 

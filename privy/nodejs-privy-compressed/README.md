@@ -7,6 +7,7 @@ Node.js example using Privy Node.js to sign compressed token transactions.
 - **[decompress.ts](src/decompress.ts)** - Decompress tokens to SPL for off-ramp
 - **[balances.ts](src/balances.ts)** - Fetch compressed SPL and compressed token balances
 - **[get-transaction-history.ts](src/get-transaction-history.ts)** - Fetch transaction history
+- **[comparison-spl-light.md](comparison-spl-light.md)** - SPL vs Compressed code comparison
 
 ## Getting started
 
