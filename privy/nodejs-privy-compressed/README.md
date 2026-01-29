@@ -86,7 +86,7 @@ npm run decompress -- 7cT3PeXy... 0.5 9
 
 ### Helpers
 
-**Compressed Mint**
+**Mint with Token Pool for Compression**
 
 ```bash
 npm run mint:compressed
