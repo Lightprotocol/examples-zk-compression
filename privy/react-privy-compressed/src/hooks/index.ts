@@ -3,3 +3,4 @@ export { useTransfer } from './useTransfer';
 export { useDecompress } from './useDecompress';
 export { useCompressSol } from './useCompressSol';
 export { useCompressedBalances } from './useCompressedBalances';
+export { useTransactionHistory } from './useTransactionHistory';

@@ -39,6 +39,26 @@ npm run create-mint:instruction
 npm run mint-to:instruction
 ```
 
+### Combined instructions
+
+The SDK exposes instruction-level APIs that return transaction instructions without sending them. You can combine multiple instructions into a single atomic transaction to reduce round-trips and ensure all-or-nothing execution.
+
+`combined-instructions` creates a token pool and compresses SPL tokens in one transaction:
+
+```bash
+npm run combined-instructions
+```
+
+### Wallet integration
+
+```bash
+npm run get-balances:wallet
+npm run get-history:wallet
+npm run send-tokens:wallet
+npm run decompress:wallet
+npm run compress:wallet
+```
+
 ## Network Configuration
 
 By default, scripts run on **devnet**. To switch to localnet, edit the script files:
